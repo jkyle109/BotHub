@@ -1,0 +1,30 @@
+{
+  "name": "bothub",
+  "version": "1.0.0",
+  "description": "A home for all my bots!",
+  "main": "rye.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"node rye.js\" \"node cat.js\"",
+    "rye": "node rye.js",
+    "cat": "node cat.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkyle109/BotHub.git"
+  },
+  "author": "Jonathan Edey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jkyle109/BotHub/issues"
+  },
+  "homepage": "https://github.com/jkyle109/BotHub#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "concurrently": "^5.3.0",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "pg": "^8.5.1",
+    "pg-escape": "^0.2.0"
+  }
+}
