@@ -3,7 +3,7 @@ module.exports = {
     description: "Adds a custom command.",
     args: true,
     hidden: false,
-    execute(message, args, client, d, db_commandsb) {
+    execute(message, args, client, db, db_commands) {
         // const commandName = args.shift();
         // const regex = new RegExp(`${commandName} +`);
         // const commandMessage = message.content.slice(process.env.PREFIX.length).split(regex, 2)[1];
@@ -26,10 +26,10 @@ module.exports = {
         try {
             if (commandName in db_commands) {
                 // Checks for database commands
+                console.log("???? " + commandName + " " + commandMessage);
                 message.reply(
                     `There is already a custom command called "${commandName}".`
                 );
-                return;
             } else {
                 const query = `INSERT INTO custom_commands (command_name, command_message) VALUES ($$${commandName}$$, $$${commandMessage}$$)`;
                 console.log(query);
@@ -43,6 +43,7 @@ module.exports = {
                 });
             }
         } catch (err) {
+            console.log(err);
             message.reply(`Something broke :o`);
         }
     },
