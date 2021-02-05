@@ -49,7 +49,7 @@ client.on("message", (message) => {
     if (message.content.toLowerCase().startsWith(prefix + "cat")) {
         sendCatPic(message);
         return;
-    } else if (message.content.toLowerCase().includes("cat")) {
+    } else if (message.content.toLowerCase() == "cat") {
         message.channel.send("meow");
         return;
     }
