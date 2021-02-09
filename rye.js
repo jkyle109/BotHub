@@ -101,7 +101,7 @@ client.on("message", (message) => {
     }
 
     if (message.author.tag == "Sodene#8026") {
-        if (genRand(1, 100) < 3) {
+        if (genRand(1, 400) <= 1) {
             message.reply("How are you so handsome?", { files: [igor] });
             return;
         }
