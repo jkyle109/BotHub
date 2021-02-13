@@ -5,7 +5,7 @@
   "main": "rye.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"node rye.js\" \"node cat.js\"",
+    "start": "node bots.js",
     "rye": "node rye.js",
     "cat": "node cat.js"
   },
