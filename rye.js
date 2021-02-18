@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Discord = require("discord.js");
+const { genRand } = require("./factory.js");
 
 require("dotenv").config();
 
@@ -19,7 +20,7 @@ const kyleVids = [
     process.env.KYLE_VID3,
 ];
 const igor = process.env.IGOR;
-const SANTA = process.env.SANTA;
+const anon = process.env.ANON;
 
 for (const file of commandFiles) {
     const command = require(`./commands/${file}`); //Imports the command modules
@@ -67,10 +68,6 @@ client.on("ready", async () => {
     console.log("Ready!");
 });
 
-function genRand(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 client.on("message", (message) => {
     // console.log(db_commands)
     // console.log(client.commands)
@@ -81,13 +78,13 @@ client.on("message", (message) => {
     if (message.channel.type == "dm") {
         const embed = new Discord.MessageEmbed()
             .setAuthor(
-                "Santa",
-                "https://cdn.betterttv.net/emote/5fa35c3e40eb9502e223d70b/3x"
+                "Anon Obama",
+                "https://66.media.tumblr.com/a2cac90586272720ca729c4fed330eb2/tumblr_oq81bxB5v11w4ydpno1_400.jpg"
             )
             .setColor(0xff0000)
             .setDescription(message.content);
 
-        client.channels.cache.get(SANTA).send(embed);
+        client.channels.cache.get(anon).send(embed);
         // client.users.cache.get(ownerID).send(embed)
         return;
     }
