@@ -11,7 +11,6 @@ const owner = process.env.BOT_OWNER;
 const link = "https://pokeapi.co/api/v2/pokemon/";
 
 const pg = require("pg");
-const { join } = require("../../Sites/drabble/src/wordList.js");
 const db = new pg.Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
@@ -135,7 +134,7 @@ make_embeds = (poke) => {
         color: 0x3b4cca,
         title: `Nice, you caught ${poke.name}!`,
         url: "https://pokeapi.co/",
-        description: `You added ${poke.name} to your Pokédex!`,
+        description: `added ${poke.name} to their Pokédex!`,
         thumbnail: {
             url: poke.url,
         },
@@ -203,14 +202,17 @@ client.on("message", async (message) => {
 
         let embeds = make_embeds(poke);
 
-        message.channel.send({ embed: embeds.appear }).then((sent) => {
-            sent.react(reactionEmoji);
+        message.channel.send({ embed: embeds.appear }).then(async (sent) => {
+            await sent.react(reactionEmoji);
             sent.awaitReactions(filter, {
-                max: 2,
+                max: 1,
                 time: 5000,
                 errors: ["time"],
             })
-                .then(async () => {
+                .then(async (col) => {
+                    claim_user = col.first().users.cache.last();
+                    embeds.entry.description = `${claim_user} ${embeds.entry.description}`;
+                    // TODO: Make this more accurate and check to see of the user has encounter this pokemon before!
                     sent.edit({ embed: embeds.entry });
                     await claim_poke(user, poke);
                 })
