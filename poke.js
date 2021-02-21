@@ -194,7 +194,7 @@ make_no_poke = (message) => {
         color: 0x3b4cca,
         title: "Oh no! Looks like you don't have any pokemon.",
         url: "https://pokeapi.co/",
-        description: `${message.author}, type 'poke' to start catching pokémon!`,
+        description: `${message.author}, type '${prefix}poke' to start catching pokémon!`,
         thumbnail: {
             url:
                 "https://www.serebii.net/pokemonmasters/syncpairs/icons/professoroak.png",
@@ -373,10 +373,10 @@ client.on("message", async (message) => {
         }
         // Figure out spliting the
     }
-    if (message.content == "wipe") {
+    if (message.content.toLowerCase().startsWith(`${prefix}wipe`)) {
         wipe_user_poke(user);
     }
-    if (message.content == "wipe_all") {
+    if (message.content.toLowerCase().startsWith(`${prefix}wipe_all`)) {
         wipe_all_poke();
     }
 });
