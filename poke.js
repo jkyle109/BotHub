@@ -20,6 +20,7 @@ const db = new pg.Client({
 
 user_ids = {};
 
+// Gets the users in the database
 get_users = async () => {
     let query = "SELECT user_id FROM pokemon_leaderboard";
     console.log(query);
@@ -38,9 +39,10 @@ get_users = async () => {
     );
 };
 
-add_user = async (id, pokedata) => {
+// Adds a user into a the data base and returns the response
+add_user = async (id) => {
     pokedata = JSON.stringify(pokedata);
-    let query = `INSERT INTO pokemon_leaderboard ( user_id, poke_ids ) VALUES (${id}, '${pokedata}')`;
+    let query = `INSERT INTO pokemon_leaderboard ( user_id, poke_ids ) VALUES (${id}, '{}')`;
     console.log(query);
     return await new Promise((resolve, rej) =>
         db.query(query, (err, res) => {
@@ -53,6 +55,7 @@ add_user = async (id, pokedata) => {
     );
 };
 
+// Gets the pokemon that a user has caught
 get_user_poke = async (id) => {
     let query = `SELECT poke_ids FROM pokemon_leaderboard WHERE user_id=${id}`;
     console.log(query);
@@ -66,6 +69,7 @@ get_user_poke = async (id) => {
     );
 };
 
+// Updates a user's caught pokemon
 update_user_poke = async (id, pokedata) => {
     pokedata = JSON.stringify(pokedata);
     let query = `UPDATE pokemon_leaderboard SET poke_ids='${pokedata}' WHERE user_id=${id}`;
@@ -81,25 +85,42 @@ update_user_poke = async (id, pokedata) => {
     );
 };
 
-claim_poke = async (user, poke) => {
+// Checks if the user is in the database
+known_user = async (id) => {
     await get_users();
-    if (!(user in user_ids)) {
-        let res = await add_user(user, { [poke.id]: 1 });
+    if (id in user_ids) {
+        return true;
     } else {
-        let user_pokes = await get_user_poke(user);
-        if (poke.id in user_pokes) {
-            user_pokes[poke.id] += 1;
-        } else {
-            user_pokes[poke.id] = 1;
-        }
-        await update_user_poke(user, user_pokes);
+        return false;
     }
 };
 
+// Adds a pokemon to the users list then saves it to the database
+claim_poke = async (user, poke) => {
+    await get_users();
+    if (!(await known_user(user))) {
+        await add_user(user);
+    }
+    let user_pokes = await get_user_poke(user);
+    if (poke.id in user_pokes) {
+        user_pokes[poke.id].count += 1;
+    } else {
+        user_pokes[poke.id] = {
+            name: poke.name,
+            id: poke.id,
+            url: poke.url,
+            count: 1,
+        };
+    }
+    await update_user_poke(user, user_pokes);
+};
+
+// Clear user pokemon data
 wipe_user_poke = async (id) => {
     return await update_user_poke(id, {});
 };
 
+// Clear all pokemon data
 wipe_all_poke = async () => {
     let query = `UPDATE pokemon_leaderboard SET poke_ids='{}'`;
     console.log(query);
@@ -114,6 +135,7 @@ wipe_all_poke = async () => {
     );
 };
 
+// Makes embeds for the 3 states of pokemon interaction
 make_embeds = (poke) => {
     const appear = {
         color: 0x3b4cca,
@@ -167,6 +189,80 @@ make_embeds = (poke) => {
     };
 };
 
+make_no_poke = (message) => {
+    return {
+        color: 0x3b4cca,
+        title: "Oh no! Looks like you don't have any pokemon.",
+        url: "https://pokeapi.co/",
+        description: `${message.author}, type 'poke' to start catching pokémon!`,
+        thumbnail: {
+            url:
+                "https://www.serebii.net/pokemonmasters/syncpairs/icons/professoroak.png",
+        },
+        footer: {
+            text: "| \u200b \u200b Gotta Catch'em All!",
+            icon_url:
+                "https://upload.wikimedia.org/wikipedia/commons/3/39/Pokeball.PNG",
+        },
+    };
+};
+
+make_list_page = (user, user_pokes, page, p_count, page_number) => {
+    let page_data = format_page_data(page, user_pokes);
+    let res = {
+        color: 0x3b4cca,
+        title: "Pokédex",
+        url: "https://pokeapi.co/",
+        description: `${user}'s, Pokédex!`,
+        thumbnail: {
+            url:
+                "https://www.serebii.net/pokemonmasters/syncpairs/icons/professoroak.png",
+        },
+        fields: [
+            {
+                name: "Dex No.",
+                value: page_data.id,
+                inline: true,
+            },
+            {
+                name: "Name",
+                value: page_data.name,
+                inline: true,
+            },
+            {
+                name: "Count",
+                value: page_data.count,
+                inline: true,
+            },
+        ],
+        footer: {
+            text: `| Page # ${
+                page_number + 1
+            } of ${p_count} | \u200b \u200b Gotta Catch'em All!`,
+            icon_url:
+                "https://upload.wikimedia.org/wikipedia/commons/3/39/Pokeball.PNG",
+        },
+    };
+    return res;
+};
+
+format_page_data = (page, user_pokes) => {
+    res_id = "```\n";
+    res_name = "```\n";
+    res_count = "```\n";
+    for (id in page) {
+        let poke = user_pokes[page[id]];
+        res_id += `\n# ${poke.id}`;
+        res_name += `\n${poke.name}`;
+        res_count += `\n ${poke.count}`;
+    }
+    return {
+        id: res_id + "\n\n```",
+        name: res_name + "\n\n```",
+        count: res_count + "\n\n```",
+    };
+};
+
 client.on("ready", async () => {
     db.connect();
 
@@ -179,7 +275,7 @@ client.on("ready", async () => {
     });
 
     const user = await client.users.fetch(owner);
-    // user.send("Ready to catch em all!");
+    // user.send("```\nReady\tto\ncatch\t\tem all!```");
     console.log("Ready to catch em all!");
 });
 
@@ -190,7 +286,7 @@ client.on("message", async (message) => {
 
     let user = message.author.id;
 
-    if (message.content.toLowerCase().includes("poke")) {
+    if (message.content.toLowerCase().startsWith(`${prefix}poke`)) {
         let poke = await getPoke();
 
         const reactionEmoji = message.guild.emojis.cache.find(
@@ -220,6 +316,63 @@ client.on("message", async (message) => {
         });
         return;
     }
+    if (message.content.toLowerCase().startsWith(`${prefix}list`)) {
+        user = message.author.id;
+        if (!(await known_user(user))) {
+            message.channel.send({ embed: make_no_poke(message) });
+        } else {
+            let user_pokes = await get_user_poke(user);
+            let poke_array = Object.keys(user_pokes);
+            let pages = chunk_array(poke_array, 10);
+
+            embed_pages = pages.map((page, i) => {
+                return make_list_page(
+                    message.author,
+                    user_pokes,
+                    page,
+                    pages.length,
+                    i
+                );
+            });
+
+            let page_number = 0;
+            const left = "◀";
+            const right = "▶";
+            const filter = (reaction, user) => {
+                return (
+                    [left, right].includes(reaction.emoji.name) &&
+                    user.id === message.author.id
+                );
+            };
+
+            message.channel
+                .send({ embed: embed_pages[page_number] })
+                .then(async (sent) => {
+                    await sent.react(left);
+                    await sent.react(right);
+                    const page_col = sent.createReactionCollector(filter);
+                    page_col.on("collect", async (reaction) => {
+                        await reaction.users.remove(message.author.id);
+                        let emoji = reaction.emoji.name;
+                        if (emoji == left) {
+                            if (page_number == 0) return;
+                            page_number--;
+                            sent.edit({ embed: embed_pages[page_number] });
+                        } else {
+                            if (page_number == embed_pages.length - 1) return;
+                            page_number++;
+                            sent.edit({ embed: embed_pages[page_number] });
+                        }
+                    });
+                    sent.awaitReactions(filter, {
+                        max: 1,
+                        errors: ["time"],
+                    });
+                });
+            console.log(pages);
+        }
+        // Figure out spliting the
+    }
     if (message.content == "wipe") {
         wipe_user_poke(user);
     }
@@ -234,13 +387,19 @@ fetchPokeData = async (num) => {
     return pokemon;
 };
 
-getPoke = async (num = genRand(1, 151)) => {
+getPoke = async () => {
     let pokemon = await fetchPokeData(genRand(1, 151));
     return {
-        name: pokemon.name,
+        name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
         id: pokemon.id,
         url: pokemon.sprites.front_default,
     };
+};
+
+chunk_array = (items, size) => {
+    return new Array(Math.ceil(items.length / size))
+        .fill()
+        .map((_) => items.splice(0, size));
 };
 
 client.login(token);
