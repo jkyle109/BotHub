@@ -373,10 +373,18 @@ client.on("message", async (message) => {
         }
         // Figure out spliting the
     }
-    if (message.content.toLowerCase().startsWith(`${prefix}wipe`)) {
+    if (
+        message.content
+            .toLowerCase()
+            .startsWith(`${prefix}wipe` && message.author.id == owner)
+    ) {
         wipe_user_poke(user);
     }
-    if (message.content.toLowerCase().startsWith(`${prefix}wipe_all`)) {
+    if (
+        message.content
+            .toLowerCase()
+            .startsWith(`${prefix}wipe_all` && message.author.id == owner)
+    ) {
         wipe_all_poke();
     }
 });
