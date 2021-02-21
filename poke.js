@@ -322,6 +322,9 @@ client.on("message", async (message) => {
             message.channel.send({ embed: make_no_poke(message) });
         } else {
             let user_pokes = await get_user_poke(user);
+            if (Object.keys(user_pokes).length === 0) {
+                message.channel.send({ embed: make_no_poke(message) });
+            }
             let poke_array = Object.keys(user_pokes);
             let pages = chunk_array(poke_array, 10);
 
@@ -374,16 +377,14 @@ client.on("message", async (message) => {
         // Figure out spliting the
     }
     if (
-        message.content
-            .toLowerCase()
-            .startsWith(`${prefix}wipe` && message.author.id == owner)
+        message.content.toLowerCase().startsWith(`${prefix}wipe`) &&
+        message.author.id == owner
     ) {
         wipe_user_poke(user);
     }
     if (
-        message.content
-            .toLowerCase()
-            .startsWith(`${prefix}wipe_all` && message.author.id == owner)
+        message.content.toLowerCase().startsWith(`${prefix}wipe_all`) &&
+        message.author.id == owner
     ) {
         wipe_all_poke();
     }
