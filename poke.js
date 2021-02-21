@@ -41,7 +41,7 @@ get_users = async () => {
 
 // Adds a user into a the data base and returns the response
 add_user = async (id) => {
-    pokedata = JSON.stringify(pokedata);
+    // pokedata = JSON.stringify(pokedata);
     let query = `INSERT INTO pokemon_leaderboard ( user_id, poke_ids ) VALUES (${id}, '{}')`;
     console.log(query);
     return await new Promise((resolve, rej) =>
