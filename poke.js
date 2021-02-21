@@ -320,10 +320,12 @@ client.on("message", async (message) => {
         user = message.author.id;
         if (!(await known_user(user))) {
             message.channel.send({ embed: make_no_poke(message) });
+            return;
         } else {
             let user_pokes = await get_user_poke(user);
             if (Object.keys(user_pokes).length === 0) {
                 message.channel.send({ embed: make_no_poke(message) });
+                return;
             }
             let poke_array = Object.keys(user_pokes);
             let pages = chunk_array(poke_array, 10);
