@@ -6,6 +6,7 @@ concurrently(
         { command: "node rye.js", name: "rye bot" },
         { command: "node cat.js", name: "cat bot" },
         { command: "node poke.js", name: "poke bot" },
+        { command: "node smurf.js", name: "smurf bot" },
     ],
     {
         // Concurrently settings

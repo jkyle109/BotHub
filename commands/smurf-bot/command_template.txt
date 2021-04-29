@@ -2,7 +2,8 @@ module.exports = {
     name: "",
     description: "",
     args: false,
-    execute(message, args, client, db, db_commands){
+    hidden: false,
+    execute(message, args, client, db, crypt){
         return;
     }
 }

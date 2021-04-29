@@ -1,0 +1,9 @@
+module.exports = {
+    name: "",
+    description: "",
+    args: false,
+    hidden: false,
+    execute(message, args, client, db, db_commands){
+        return;
+    }
+}

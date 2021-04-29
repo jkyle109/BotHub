@@ -6,8 +6,9 @@ require("dotenv").config();
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+const commandsPath = "./commands/rye-bot";
 const commandFiles = fs
-    .readdirSync("./commands")
+    .readdirSync(commandsPath)
     .filter((file) => file.endsWith(".js")); // Reads command folder for commands files
 
 const prefix = process.env.PREFIX;
@@ -23,7 +24,7 @@ const igor = process.env.IGOR;
 const anon = process.env.ANON;
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`); //Imports the command modules
+    const command = require(`${commandsPath}/${file}`); //Imports the command modules
     client.commands.set(command.name, command);
 }
 
