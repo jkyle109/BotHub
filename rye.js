@@ -78,34 +78,34 @@ client.on("message", (message) => {
     }
 
     if (message.channel.type == "dm") {
-        if(() => {
-            const imageTypes = ["png","jpg","jpeg","gif"]
-            for(let type in imageTypes) {
-                if(message.content.toLowerCase().startsWith("http") && message.content.toLowerCase().endsWith(type)){
-                    return true
-                }
-            }
-            return false
-        }){
-            try{
-                client.channels.cache.get(anon).send({files: [message.content]})
-            }
-            catch(e){
-                message.reply("Invalid image link")
-            }
-        }
-        else {
-            const embed = new Discord.MessageEmbed()
-                .setAuthor(
-                    "Santa (OBAMA)",
-                    "https://66.media.tumblr.com/a2cac90586272720ca729c4fed330eb2/tumblr_oq81bxB5v11w4ydpno1_400.jpg"
-                )
-                .setColor(0xff0000)
-                .setDescription(message.content);
+        // if(() => {
+        //     const imageTypes = ["png","jpg","jpeg","gif"]
+        //     for(let type in imageTypes) {
+        //         if(message.content.toLowerCase().startsWith("http") && message.content.toLowerCase().endsWith(type)){
+        //             return true
+        //         }
+        //     }
+        //     return false
+        // }){
+        //     try{
+        //         client.channels.cache.get(anon).send({files: [message.content]})
+        //     }
+        //     catch(e){
+        //         message.reply("Invalid image link")
+        //     }
+        // }
+        // else {
+        const embed = new Discord.MessageEmbed()
+            .setAuthor(
+                "Santa (OBAMA)",
+                "https://66.media.tumblr.com/a2cac90586272720ca729c4fed330eb2/tumblr_oq81bxB5v11w4ydpno1_400.jpg"
+            )
+            .setColor(0xff0000)
+            .setDescription(message.content);
 
-            client.channels.cache.get(santa).send(embed);
-            // client.users.cache.get(ownerID).send(embed)
-        }
+        client.channels.cache.get(santa).send(embed);
+        // client.users.cache.get(ownerID).send(embed)
+        // }
         
         return;
     }
