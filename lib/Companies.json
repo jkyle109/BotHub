@@ -1,0 +1,25 @@
+{
+	"companies": [
+		{
+			"name": "hm",
+			"imgUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/H%26M-Logo.svg/640px-H%26M-Logo.svg.png",
+			"queryUrl": {
+				"men": "https://www2.hm.com/en_ca/sale/shopbyproductmen/view-all/_jcr_content/main/productlisting_9436.display.json?sort=stock&image-size=small&image=stillLife&page-size=100",
+				"women": "https://www2.hm.com/en_ca/sale/shopbyproductladies/view-all/_jcr_content/main/productlisting_b48c.display.json?sort=stock&image-size=small&image=stillLife&page-size=100"
+			}
+		},
+		{
+			"name": "zara",
+			"imgUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Zara_Logo.svg/375px-Zara_Logo.svg.png",
+			"queryUrl": {
+				"men": "https://www.zara.com/ca/en/category/2007240/products?ajax=true",
+				"women": ""
+			}
+		},
+		{
+			"name": "uniqlo",
+			"imgUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/UNIQLO_logo.svg/330px-UNIQLO_logo.svg.png",
+			"queryUrl": "https://www.uniqlo.com/on/demandware.store/Sites-UniqloUS-Site/default/Search-UpdateGrid?cgid=men-sale-outerwear&start=16&sz=16"
+		}
+	]
+}

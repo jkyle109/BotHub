@@ -8,7 +8,8 @@
     "start": "node bots.js",
     "rye": "node rye.js",
     "cat": "node cat.js",
-    "poke": "node poke.js"
+    "poke": "node poke.js",
+    "price": "node price.js"
   },
   "repository": {
     "type": "git",
